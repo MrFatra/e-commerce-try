@@ -10,15 +10,23 @@ const Marketplace = () => {
     try {
       const request = await fetch('/api/marketplace')
       const response = await request.json()
-      console.log('response.data: ', response.data)
+      console.log('response: ', response)
 
-      setData(response.data)
+      setData(response.products)
     } catch (error: any) {
       console.log(error.message)
 
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const logout = async () => {
+    const request = await fetch('api/auth/logout', {
+      method: "POST",
+    })
+    const response = await request.json()
+    console.log(response)
   }
 
   useEffect(() => {
@@ -38,6 +46,7 @@ const Marketplace = () => {
         ))
         : <p>No data.</p>
       }
+      <button onClick={logout}>Logout</button>
     </div>
   )
 }

@@ -1,12 +1,28 @@
+import sessionCheck from "@/lib/action";
 import prisma from "@/lib/instance";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     try {
+        await sessionCheck(req)
         const products = await prisma.product.findMany()
-        return NextResponse.json({ message: 'Success', code: 200, data: products })
+        return NextResponse.json({ message: 'Success!', code: 200, products })
     } catch (error: any) {
         console.log(error.message)
-        return NextResponse.json({ message: error.message, code: 401, data: [] })
+        return NextResponse.json({ message: error.message, code: 500, products: [] })
+    }
+}
+
+export async function POST(req: NextRequest) {
+    try {
+        await sessionCheck(req)
+        const { name, quantity, price } = await req.json()
+        const product = await prisma.product.create({
+            data: { name, price, quantity }
+        })
+        return NextResponse.json({ message: 'Product added!', code: 200, product })
+    } catch (error: any) {
+        console.log(error.message)
+        return NextResponse.json({ message: 'Add product failed!', code: 500 })
     }
 }
