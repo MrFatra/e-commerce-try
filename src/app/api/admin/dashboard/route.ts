@@ -1,4 +1,4 @@
-import sessionCheck from "@/lib/action";
+import sessionCheck from "@/lib/session";
 import prisma from "@/lib/instance";
 import { NextRequest, NextResponse } from "next/server";
 

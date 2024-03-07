@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react'
 import { Product } from '@prisma/client'
 
-const Marketplace = () => {
+const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState<Product[]>()
 
   const init = async () => {
     try {
-      const request = await fetch('/api/marketplace')
+      const request = await fetch('/api/admin/dashboard')
       const response = await request.json()
       console.log('response: ', response)
 
@@ -22,7 +22,7 @@ const Marketplace = () => {
   }
 
   const logout = async () => {
-    const request = await fetch('api/auth/logout', {
+    const request = await fetch('/api/auth/logout', {
       method: "POST",
     })
     const response = await request.json()
@@ -35,7 +35,7 @@ const Marketplace = () => {
 
   return (
     <div>
-      <p>Marketplace</p>
+      <p>Dashboard</p>
       <p>List of products:</p>
       {
         isLoading 
@@ -51,4 +51,4 @@ const Marketplace = () => {
   )
 }
 
-export default Marketplace
+export default Dashboard

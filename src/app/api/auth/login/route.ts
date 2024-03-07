@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         const decryptedPass = await bcrypt.compare(password, user.password)
         if (!decryptedPass) throw new Error('Invalid username or password.')
 
-        const cookie = signJWT(user.id)
+        const cookie = signJWT(user.id, user.role)
 
         const responseHeaders = new Headers()
         responseHeaders.append('Set-Cookie', cookie)
@@ -26,10 +26,10 @@ export async function POST(req: NextRequest) {
     }
 }
 
-const signJWT = (userId: string) => {
+const signJWT = (userId: string, role: string) => {
     const secret = process.env.JWT_SECRET
     if (!secret) throw new Error('Invalid secret token.')
-    const token = jwt.sign({ userId }, secret, {
+    const token = jwt.sign({ userId, role }, secret, {
         expiresIn: '2d',
     })
     const cookie = serialize('session', token, {
