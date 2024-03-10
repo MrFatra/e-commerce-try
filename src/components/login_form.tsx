@@ -1,45 +1,41 @@
 'use client'
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Joi from 'joi';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
+import { ILoginForm, loginValidator } from '@/lib/joi';
+import useSWRMutation from 'swr/mutation';
+import { fetcher } from '@/lib/fetcher';
+import { Loading } from './ui/loading';
+import { useToast } from './ui/use-toast';
+import { successColor } from '@/lib/colors';
 
 const LoginForm = () => {
-    const schema =
-        Joi.object({
-            username: Joi.string().required().messages({
-                "string.empty": `Username cannot be empty`,
-                "any.required": `Username is required`,
-            }),
-            password: Joi.string()
-                .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
-                .required()
-                .messages({
-                    "string.pattern.base": `Password should be between 3 to 30 characters and contain letters or numbers only`,
-                    "string.empty": `Password cannot be empty`,
-                    "any.required": `Password is required`,
-                }),
-        })
+    const { toast } = useToast()
+    const { trigger, isMutating } = useSWRMutation('/api/auth/login', (url, { arg }: { arg?: ILoginForm | any }) => fetcher(url, { arg }, 'POST'))
 
-    interface LoginForm {
-        username: string,
-        password: string,
-    }
-
-    const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
-        resolver: joiResolver(schema)
+    const { register, handleSubmit, formState: { errors } } = useForm<ILoginForm>({
+        resolver: joiResolver(loginValidator)
     })
 
-    const onSubmit = handleSubmit(async (d, e) => {
-        e?.preventDefault()
-        console.log(d)
-        const request = await fetch('/api/auth/login', {
-            method: "POST",
-            body: JSON.stringify(d),
+    const onSubmit = handleSubmit(async (data, event) => {
+        event?.preventDefault()
+        console.log('data form: ', data)
+        trigger(data).then(res => {
+            if (res.code !== 200) {
+                toast({
+                    title: 'Error',
+                    description: res.message,
+                    variant: 'destructive',
+                })
+            } else if (res.code === 200) {
+                toast({
+                    title: 'Logged in!',
+                    description: res.message,
+                    style: successColor
+                })
+            }
         })
-        const response = await request.json()
-        console.log(response)
     })
 
     return (
@@ -52,7 +48,7 @@ const LoginForm = () => {
                 <Input type='password' {...register('password')} className={errors.password ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-400 border focus-visible:border-0'} placeholder='Password' />
                 <p className='text-red-500 text-sm'>{errors.password?.message}</p>
             </div>
-            <Button type="submit">Login</Button>
+            <Button type="submit">{isMutating ? <Loading /> : 'Login'}</Button>
         </form>
     );
 };
