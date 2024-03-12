@@ -1,5 +1,5 @@
 
-import RegisterForm from "@/components/register_form";
+import RegisterForm from "@/components/register-form";
 
 const Register = () => {
 

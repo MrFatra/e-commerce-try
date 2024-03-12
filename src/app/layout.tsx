@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Jost } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import Sidebar from "@/components/sidebar";
 
 const jost = Jost({ subsets: ["latin"] });
 
