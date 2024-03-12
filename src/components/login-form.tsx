@@ -9,9 +9,11 @@ import { fetcher } from '@/lib/fetcher';
 import { Loading } from './ui/loading';
 import { useToast } from './ui/use-toast';
 import { successColor } from '@/lib/colors';
+import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
     const { toast } = useToast()
+    const router = useRouter()
     const { trigger, isMutating } = useSWRMutation('/api/auth/login', (url, { arg }: { arg?: ILoginForm | any }) => fetcher(url, { arg }, 'POST'))
 
     const { register, handleSubmit, formState: { errors } } = useForm<ILoginForm>({
@@ -34,6 +36,7 @@ const LoginForm = () => {
                     description: res.message,
                     style: successColor
                 })
+                setTimeout(router.refresh, 800)
             }
         })
     })

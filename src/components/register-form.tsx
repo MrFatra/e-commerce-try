@@ -9,9 +9,11 @@ import { fetcher } from '@/lib/fetcher';
 import { Loading } from './ui/loading';
 import { useToast } from './ui/use-toast';
 import { successColor } from '@/lib/colors';
+import { useRouter } from 'next/navigation';
 
 const RegisterForm = () => {
     const { toast } = useToast()
+    const router = useRouter()
 
     const { trigger, isMutating } = useSWRMutation('/api/auth/register', (url, { arg }: { arg?: IRegisterForm | any }) => fetcher(url, { arg }, 'POST'))
 
@@ -35,6 +37,7 @@ const RegisterForm = () => {
                         description: res.message,
                         style: successColor
                     })
+                    setTimeout(() => router.push('/login'), 800)
                 }
             })
         })
