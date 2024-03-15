@@ -37,30 +37,30 @@ const RegisterForm = () => {
                         description: res.message,
                         style: successColor
                     })
-                    setTimeout(() => router.push('/login'), 800)
+                    setTimeout(() => router.push('/auth/login'), 800)
                 }
             })
         })
 
     return (
-        <form onSubmit={onSubmit} className='flex flex-col gap-4'>
+        <form onSubmit={onSubmit} className='flex flex-col gap-4 w-full'>
             <div className="">
-                <Input {...register('fullName')} className={errors.fullName ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-400 border focus-visible:border-0'} placeholder='Full Name' />
+                <Input {...register('fullName')} className={errors.fullName ? 'border-red-500 focus-visible:ring-red-500 py-6' : 'py-6 border-gray-400 border focus-visible:border-0'} placeholder='Full Name' />
                 <p className='text-red-500 text-sm'>{errors.fullName?.message}</p>
             </div>
             <div className="">
-                <Input {...register('username')} className={errors.username ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-400 border focus-visible:border-0'} placeholder='Username' />
+                <Input {...register('username')} className={errors.username ? 'border-red-500 focus-visible:ring-red-500 py-6' : 'py-6 border-gray-400 border focus-visible:border-0'} placeholder='Username' />
                 <p className='text-red-500 text-sm'>{errors.username?.message}</p>
             </div>
             <div className="">
-                <Input type='password' {...register('password')} className={errors.password ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-400 border focus-visible:border-0'} placeholder='Password' />
+                <Input type='password' {...register('password')} className={errors.password ? 'border-red-500 focus-visible:ring-red-500 py-6' : 'py-6 border-gray-400 border focus-visible:border-0'} placeholder='Password' />
                 <p className='text-red-500 text-sm'>{errors.password?.message}</p>
             </div>
             <div className="">
-                <Input type='password' {...register('confirmPassword')} className={errors.confirmPassword ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-400 border focus-visible:border-0'} placeholder='Confirm Password' />
+                <Input type='password' {...register('confirmPassword')} className={errors.confirmPassword ? 'border-red-500 focus-visible:ring-red-500 py-6' : 'py-6 border-gray-400 border focus-visible:border-0'} placeholder='Confirm Password' />
                 <p className='text-red-500 text-sm'>{errors.confirmPassword?.message}</p>
             </div>
-            <Button type="submit">{isMutating ? <Loading /> : 'Register'}</Button>
+            <Button type="submit" className='py-6 font-medium text-base'>{isMutating ? <Loading /> : 'Register'}</Button>
         </form>
     );
 };

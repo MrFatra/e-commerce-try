@@ -42,16 +42,16 @@ const LoginForm = () => {
     })
 
     return (
-        <form onSubmit={onSubmit} className='flex flex-col gap-4'>
+        <form onSubmit={onSubmit} className='flex flex-col gap-4 w-full'>
             <div className="">
-                <Input {...register('username')} className={errors.username ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-400 border focus-visible:border-0'} placeholder='Username' />
+                <Input {...register('username')} className={errors.username ? 'border-red-500 focus-visible:ring-red-500 py-6' : 'py-6 border-gray-400 border focus-visible:border-0'} placeholder='Username' />
                 <p className='text-red-500 text-sm'>{errors.username?.message}</p>
             </div>
             <div className="">
-                <Input type='password' {...register('password')} className={errors.password ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-400 border focus-visible:border-0'} placeholder='Password' />
+                <Input type='password' {...register('password')} className={errors.password ? 'border-red-500 focus-visible:ring-red-500 py-6' : 'py-6 border-gray-400 border focus-visible:border-0'} placeholder='Password' />
                 <p className='text-red-500 text-sm'>{errors.password?.message}</p>
             </div>
-            <Button type="submit">{isMutating ? <Loading /> : 'Login'}</Button>
+            <Button type="submit" className='py-6 font-medium text-base'>{isMutating ? <Loading /> : 'Login'}</Button>
         </form>
     );
 };

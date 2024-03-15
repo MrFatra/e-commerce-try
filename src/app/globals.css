@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    --link: 210 100% 60%;
+    --link-foreground: 0 0% 100%; 
+
     --success: 120 65% 50%;
     --success-foreground: 0 0% 100%;
 
@@ -48,6 +51,9 @@
   }
 
   .dark {
+    --link: 210 100% 60%;
+    --link-foreground: 0 0% 100%;
+    
     --success: 120 65% 50%;
     --success-foreground: 0 0% 100%;
 
