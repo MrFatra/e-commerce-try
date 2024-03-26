@@ -1,12 +1,23 @@
-import LoginForm from "@/components/login-form"
+import LoginForm from "@/components/forms/login-form"
+import genImgBase64 from "@/lib/plaiceholder"
+import Image from "next/image"
 import Link from "next/link"
 
-const Login = () => {
-  
+const Login = async () => {
+  const image = await genImgBase64()
+
   return (
     <div className='grid grid-cols-2 min-h-screen'>
       <div className="relative">
-        <img src="/images/market-login.jpg" alt="Market Tree" className="object-cover w-full h-full"/>
+        <Image
+          fill
+          sizes="(max-width: 1000px) 100vw, (max-width: 1200px) 60vw, 33vw"
+          src="/images/market-login.jpg"
+          blurDataURL={image}
+          alt="Market Tree"
+          placeholder="blur"
+          className="object-cover w-full h-full"
+        />
         <p className="absolute bottom-3 left-3 font-semibold text-white opacity-85">Image by Freepik</p>
       </div>
       <div className="flex flex-col items-center justify-center px-10">

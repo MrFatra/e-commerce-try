@@ -1,18 +1,21 @@
 'use client'
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
 import { ILoginForm, loginValidator } from '@/lib/joi';
 import useSWRMutation from 'swr/mutation';
 import { fetcher } from '@/lib/fetcher';
-import { Loading } from './ui/loading';
-import { useToast } from './ui/use-toast';
+import { Loading } from '../ui/loading';
+import { useToast } from '../ui/use-toast';
 import { successColor } from '@/lib/colors';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/store/slice';
 
 const LoginForm = () => {
     const { toast } = useToast()
+    const dispatch = useDispatch()
     const router = useRouter()
     const { trigger, isMutating } = useSWRMutation('/api/auth/login', (url, { arg }: { arg?: ILoginForm | any }) => fetcher(url, { arg }, 'POST'))
 
@@ -31,6 +34,13 @@ const LoginForm = () => {
                     variant: 'destructive',
                 })
             } else if (res.code === 200) {
+                const user = {
+                    authState: true,
+                    fullName: res.user.fullName,
+                    username: res.user.username,
+                    role: res.user.role,
+                }
+                dispatch(setUser(user))
                 toast({
                     title: 'Logged in!',
                     description: res.message,
