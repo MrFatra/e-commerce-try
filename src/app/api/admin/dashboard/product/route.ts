@@ -1,10 +1,9 @@
 import sessionCheck from "@/lib/session";
-import prisma from "@/lib/instance";
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
-        await sessionCheck(req)
         const products = await prisma.product.findMany()
         return NextResponse.json({ message: 'Success!', code: 200, products })
     } catch (error: any) {

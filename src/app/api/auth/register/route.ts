@@ -1,4 +1,4 @@
-import prisma from "@/lib/instance";
+import prisma from "@/lib/prisma";
 import bcrypt from 'bcrypt'
 import Joi from 'joi'
 import { NextRequest, NextResponse } from "next/server";

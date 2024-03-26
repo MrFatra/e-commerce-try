@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { serialize } from 'cookie'
 import { NextRequest, NextResponse } from "next/server";
-import prisma from '@/lib/instance';
+import prisma from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
     try {
@@ -14,12 +14,14 @@ export async function POST(req: NextRequest) {
         const decryptedPass = await bcrypt.compare(password, user.password)
         if (!decryptedPass) throw new Error('Invalid username or password.')
 
+        const { password: _, ...userWithoutPassword } = user
+
         const cookie = signJWT(user.id, user.role)
 
         const responseHeaders = new Headers()
         responseHeaders.append('Set-Cookie', cookie)
 
-        return NextResponse.json({ message: `Authenticated as ${user.fullName}`, code: 200, user }, { headers: responseHeaders })
+        return NextResponse.json({ message: `Authenticated as ${user.fullName}`, code: 200, user: userWithoutPassword }, { headers: responseHeaders })
     } catch (error: any) {
         console.log(error.message)
         return NextResponse.json({ message: error.message, code: 500 })

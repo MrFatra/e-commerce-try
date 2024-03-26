@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import prisma from "@/lib/instance";
+import prisma from "@/lib/prisma";
 
 export default async function sessionCheck(req: NextRequest) {
     try {
@@ -14,10 +14,8 @@ export default async function sessionCheck(req: NextRequest) {
         const user = await prisma.user.findFirst({ where: { id: decoded.userId } })
 
         if (!user) throw new Error('User not found.')
-        console.log('disini')
         return user
     } catch (error: any) {
-        console.log('error disini: ', error.message)
         console.log(error.message)
     }
 }
