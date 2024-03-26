@@ -2,12 +2,14 @@
 import { MoreVertical, ChevronLast, ChevronFirst } from "lucide-react"
 import { useContext, createContext, useState, ReactNode } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
-import LogoutAction from "./logout-action"
+import LogoutAction from "./forms/logout-action"
+import { useUserSelector } from "@/store/hook"
 
 const SidebarContext = createContext({ expanded: false })
 
 export default function Sidebar({ children }: { children?: ReactNode }) {
     const [expanded, setExpanded] = useState(true)
+    const user = useUserSelector(state => state.auth)
 
     return (
         <aside className="h-screen">
@@ -33,7 +35,7 @@ export default function Sidebar({ children }: { children?: ReactNode }) {
 
                 <div className="border-t flex p-3">
                     <img
-                        src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
+                        src={`https://ui-avatars.com/api/?name=${user.fullName}background=CCCCCC&color=111111&bold=true`}
                         alt=""
                         className="w-10 h-10 rounded-md"
                     />
@@ -44,8 +46,8 @@ export default function Sidebar({ children }: { children?: ReactNode }) {
           `}
                     >
                         <div className="leading-4">
-                            <h4 className="font-semibold">John Doe</h4>
-                            <span className="text-xs text-gray-600">johndoe@gmail.com</span>
+                            <h4 className="font-semibold">{user.fullName?.toString() ?? ''}</h4>
+                            <span className="text-xs text-gray-600">{user.username?.toString() ?? ''}</span>
                         </div>
                         <Popover>
                             <PopoverTrigger>

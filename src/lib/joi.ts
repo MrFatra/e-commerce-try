@@ -50,3 +50,17 @@ Joi.object({
             "any.required": `Password is required`,
         }),
 })
+
+export interface ProductSchema {
+    name: string
+    price: number 
+    stock: number
+    image: File
+}
+
+export const productValidator  = Joi.object<ProductSchema>({
+    name: Joi.string(),
+    price: Joi.number(),
+    stock: Joi.number(),
+    image: Joi.optional()
+})

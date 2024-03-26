@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -35,9 +37,11 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
+    accessorKey: 'id',
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => {
+    cell: (props) => {
+      const router = useRouter()
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -49,8 +53,7 @@ export const columns: ColumnDef<Product>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View product details</DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push(`/dashboard/product/edit/${props.getValue()}`)}>Edit</DropdownMenuItem>
             <DropdownMenuItem variant="danger">Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
