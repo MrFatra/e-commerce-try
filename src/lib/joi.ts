@@ -60,7 +60,7 @@ export interface ProductSchema {
 
 export const productValidator  = Joi.object<ProductSchema>({
     name: Joi.string(),
-    price: Joi.number(),
+    price: Joi.string(),
     stock: Joi.number(),
     image: Joi.optional()
 })

@@ -7,9 +7,9 @@ const SidebarContent = () => {
 
     return (
         <div className="mt-4 flex flex-col">
-            <SidebarItem icon={<Box />} text='Products' />
-            <SidebarItem icon={<Users />} text='Customers' />
-            <SidebarItem icon={<ShoppingBasket />} text='Orders' />
+            <SidebarItem icon={<Box />} text='Products' link='/products'/>
+            <SidebarItem icon={<Users />} text='Customers' link='/customers'/>
+            <SidebarItem icon={<ShoppingBasket />} text='Orders' link='/orders'/>
         </div>
     )
 }

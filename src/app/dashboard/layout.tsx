@@ -14,9 +14,11 @@ export default function RootLayout({
 }>) {
     return (
         <div className="flex">
-            <Sidebar>
-                <SidebarContent />
-            </Sidebar>
+            <div className="">
+                <Sidebar>
+                    <SidebarContent />
+                </Sidebar>
+            </div>
             <main className="flex-1">{children}</main>
         </div>
     );
