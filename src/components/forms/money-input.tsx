@@ -1,18 +1,29 @@
-import React, { forwardRef } from 'react'
-import { NumericFormat, NumericFormatProps } from 'react-number-format'
+import React from 'react'
+import { NumericFormat } from 'react-number-format'
 import { Input } from '../ui/input'
+import { Control, Controller } from 'react-hook-form'
+import { ProductSchema } from '@/lib/joi'
 
-const MoneyInput = ({ placeholder, register }: any) => {
+const MoneyInput = ({ controller, defaultValue }: { controller: Control<ProductSchema, any>, defaultValue: string }) => {
   return (
-    <NumericFormat
-      getInputRef={register('price').ref}
-      placeholder={placeholder}
-      customInput={Input}
-      prefix='Rp '
-      thousandSeparator={'.'}
-      decimalSeparator=','
-      allowNegative={false}
-      {...register('price')}
+    <Controller
+      name='price'
+      control={controller}
+      defaultValue={defaultValue}
+      render={({ field: { onChange, value, ref } }) => (
+        <NumericFormat
+          customInput={Input}
+          value={value}
+          onValueChange={(values) => {
+            onChange(values.floatValue)
+          }}
+          prefix='Rp '
+          thousandSeparator='.'
+          decimalSeparator=','
+          allowNegative={false}
+          getInputRef={ref}
+        />
+      )}
     />
   )
 }

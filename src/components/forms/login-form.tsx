@@ -46,7 +46,7 @@ const LoginForm = () => {
                     description: res.message,
                     style: successColor
                 })
-                setTimeout(router.refresh, 800)
+                setTimeout(() => router.replace('/user/marketplace'), 800)
             }
         })
     })

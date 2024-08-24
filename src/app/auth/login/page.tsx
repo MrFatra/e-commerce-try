@@ -1,5 +1,5 @@
 import LoginForm from "@/components/forms/login-form"
-import genImgBase64 from "@/lib/plaiceholder"
+import { genImgBase64 } from "@/lib/plaiceholder"
 import Image from "next/image"
 import Link from "next/link"
 

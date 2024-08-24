@@ -28,7 +28,7 @@ const LogoutAction = ({ variant }: VariantButtonProps) => {
                     description: res.message + ' Please wait...',
                     style: successColor,
                 })
-                router.refresh()
+                router.replace('/auth/login')
                 dispatch(setUser({ authState: false, fullName: '', role: '', username: '' }))
             } else {
                 toast({

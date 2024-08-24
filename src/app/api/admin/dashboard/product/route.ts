@@ -1,6 +1,7 @@
 import sessionCheck from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { uploadImage } from "@/lib/imgur";
 
 export async function GET(req: NextRequest) {
     try {
@@ -15,9 +16,17 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         await sessionCheck(req)
-        const { name, quantity, price } = await req.json()
+
+        const formData = await req.formData()
+
+        const image = formData.get('image') as File
+        const name = formData.get('name')!.toString()
+        const price = parseFloat(formData.get('price')!.toString())
+        const stock = parseFloat(formData.get('stock')!.toString())
+
+        const result = await uploadImage(image, name)
         const product = await prisma.product.create({
-            data: { name, price, quantity }
+            data: { name, price, stock, image: result }
         })
         return NextResponse.json({ message: 'Product added!', code: 200, product })
     } catch (error: any) {
