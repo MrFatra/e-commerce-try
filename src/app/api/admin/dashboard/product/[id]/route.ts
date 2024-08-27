@@ -22,6 +22,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
         const formData = await req.formData()
 
+        // TODO: delete image before
+
         Object.keys(formData).forEach((key) => formData.get(key) === null && formData.delete(key))
 
         const data: any = {}
@@ -32,13 +34,25 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         })
 
         console.log('data: ', data)
+        // const image = URL.createObjectURL(formData.get('image') as File)
+
+        // let upload
+        // if (image) {
+        // upload = await serverSideUpload(req, image)
+        // }
 
         const edited = await prisma.product.update({
             where: { id },
-            data,
+            data: {
+                ...data,
+                // image: upload ? upload : null
+            }
         })
 
-        return NextResponse.json({ message: 'Success', code: 201, data: edited })
+        return NextResponse.json({
+            message: 'Success', code: 201, data: edited,
+            //  uploaded: upload !== undefined, upload 
+        })
     } catch (error: any) {
         return NextResponse.json({ message: error.message, code: 401 })
     }

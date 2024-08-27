@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Sidebar from "@/components/sidebar";
 import SidebarContent from "./sidebar-content";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 export const metadata: Metadata = {
     title: "Dashboard",
@@ -14,12 +15,14 @@ export default function RootLayout({
 }>) {
     return (
         <div className="flex">
-            <div className="">
-                <Sidebar>
-                    <SidebarContent />
-                </Sidebar>
-            </div>
-            <main className="flex-1">{children}</main>
+            <EdgeStoreProvider>
+                <div className="">
+                    <Sidebar>
+                        <SidebarContent />
+                    </Sidebar>
+                </div>
+                <main className="flex-1">{children}</main>
+            </EdgeStoreProvider>
         </div>
     );
 }
