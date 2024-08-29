@@ -4,7 +4,7 @@ import { Input } from '../ui/input'
 import { Control, Controller } from 'react-hook-form'
 import { ProductSchema } from '@/lib/joi'
 
-const MoneyInput = ({ controller, defaultValue, className }: { controller: Control<ProductSchema, any>, defaultValue: string, className: string | undefined }) => {
+const MoneyInput = ({ controller, defaultValue, className }: { controller: Control<ProductSchema, any>, defaultValue: string, className?: string | undefined }) => {
   return (
     <Controller
       name='price'

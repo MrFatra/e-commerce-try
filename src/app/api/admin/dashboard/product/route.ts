@@ -2,6 +2,7 @@ import sessionCheck from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { uploadImage } from "@/lib/imgur";
+import { serverSideUpload } from "@/lib/upload";
 
 export async function GET(req: NextRequest) {
     try {
@@ -15,19 +16,30 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     try {
-        await sessionCheck(req)
+        const user = await sessionCheck(req)
 
-        const formData = await req.formData()
+        if (!user) throw new Error('Unauthorized User')
 
-        const image = formData.get('image') as File
-        const name = formData.get('name')!.toString()
-        const price = parseFloat(formData.get('price')!.toString())
-        const stock = parseFloat(formData.get('stock')!.toString())
+        const formData = await req.formData();
 
-        const result = await uploadImage(image, name)
-        const product = await prisma.product.create({
-            data: { name, price, stock, image: result }
+        Object.keys(formData).forEach((key) => formData.get(key) === null && formData.delete(key));
+
+        const data: any = {}
+
+        formData.forEach((value, key) => {
+            if (key === 'stock' || key === 'price') data[key] = parseFloat(value as string);
+            else data[key] = value;
         })
+
+        let upload
+        const imageFile = formData.get('image')
+        if (imageFile instanceof File) {
+            upload = await serverSideUpload(URL.createObjectURL(imageFile), user?.id, user?.role, 'product')
+            data.image = upload
+        }
+
+        const product = await prisma.product.create({ data })
+        
         return NextResponse.json({ message: 'Product added!', code: 200, product })
     } catch (error: any) {
         console.log(error.message)

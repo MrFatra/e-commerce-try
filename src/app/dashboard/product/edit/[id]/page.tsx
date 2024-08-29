@@ -119,6 +119,9 @@ const page = () => {
                             setImageSelected(file)
                             setValue('image', file)
                         }}
+                        dropzoneOptions={{ 
+                            maxFiles: 1
+                         }}
                     />
                     {(imageSelected || existingImageURL) && (
                         <Button

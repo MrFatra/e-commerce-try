@@ -59,12 +59,12 @@ export interface ProductSchema {
 }
 
 export const productValidator  = Joi.object<ProductSchema>({
-    name: Joi.string(),
+    name: Joi.string().required(),
     price: Joi.number().min(1).messages({
         'number.min': 'Invalid price number.'
     }),
     stock: Joi.number(),
-    image: Joi.optional()
+    image: Joi.required(),
 })
 
 export const optionalProductValidator = Joi.object<ProductSchema>({
