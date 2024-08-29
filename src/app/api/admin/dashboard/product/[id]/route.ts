@@ -1,12 +1,12 @@
 import prisma from "@/lib/prisma";
 import sessionCheck from "@/lib/session";
+import { serverSideEdit } from "@/lib/upload";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     try {
         const { id } = params
         const product = await prisma.product.findFirst({ where: { id } })
-        console.log(product)
 
         return NextResponse.json({ message: 'Success', product }, { status: 201 })
     } catch (error: any) {
@@ -17,29 +17,46 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const { id } = params
-        await sessionCheck(req)
+        const { id } = params;
+        const user = await sessionCheck(req);
 
-        const formData = await req.formData()
+        if (!user) throw new Error('Unauthorized User');
 
-        Object.keys(formData).forEach((key) => formData.get(key) === null && formData.delete(key))
+        const formData = await req.formData();
 
-        const data: any = {}
+        Object.keys(formData).forEach((key) => formData.get(key) === null && formData.delete(key));
+
+        const data: any = {};
 
         formData.forEach((value, key) => {
-            if (key === 'stock' || key === 'price') data[key] = parseFloat(value as string)
-            else data[key] = value
-        })
+            if (key === 'stock' || key === 'price') data[key] = parseFloat(value as string);
+            else data[key] = value;
+        });
 
-        console.log('data: ', data)
+        let upload: { url: string; size: number; metadata: Record<string, never>; path: { type: string; }; pathOrder: "type"[]; } | undefined;
+        const imageFile = formData.get('image');
+        const prevImgUrl = formData.get('prevImage') as string | undefined;
+
+        if (!prevImgUrl) throw new Error('No prevImage URL.')
+
+        if (imageFile instanceof File) {
+            const imageUrl = URL.createObjectURL(imageFile);
+            upload = await serverSideEdit(imageUrl, prevImgUrl, user?.id, user?.role, 'product');
+            data.image = upload;
+        } else {
+            delete data['image']
+        }
+
+        delete data['prevImage']
 
         const edited = await prisma.product.update({
             where: { id },
             data,
-        })
+        });
 
-        return NextResponse.json({ message: 'Success', code: 201, data: edited })
+        return NextResponse.json({ message: 'Success', code: 201, data: edited });
     } catch (error: any) {
-        return NextResponse.json({ message: error.message, code: 401 })
+        console.log(error.message)
+        return NextResponse.json({ message: error.message, code: 401 });
     }
 }

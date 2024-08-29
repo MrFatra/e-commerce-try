@@ -55,7 +55,7 @@ export interface ProductSchema {
     name: string
     price: string
     stock: string
-    image?: File[] | null
+    image?: File | null
 }
 
 export const productValidator  = Joi.object<ProductSchema>({
@@ -67,9 +67,13 @@ export const productValidator  = Joi.object<ProductSchema>({
     image: Joi.optional()
 })
 
-export const optionalProductValidator  = Joi.object<ProductSchema>({
-    name: Joi.string().optional(),
-    price: Joi.number().optional(),
+export const optionalProductValidator = Joi.object<ProductSchema>({
+    name: Joi.string().required(),
+    price: Joi.number().min(1).required().messages({
+        'number.base': 'Price must be a number.',
+        'number.min': 'Invalid price number. Price must be at least 1.',
+        'any.required': 'Price required.',
+    }),
     stock: Joi.number().optional(),
     image: Joi.any().optional(),
 })
