@@ -14,6 +14,7 @@ import {
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import DeleteAction from "./delete"
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -54,7 +55,7 @@ export const columns: ColumnDef<Product>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push(`/dashboard/product/edit/${props.getValue()}`)}>Edit</DropdownMenuItem>
-            <DropdownMenuItem variant="danger">Delete</DropdownMenuItem>
+            <DeleteAction id={props.getValue() as string} variant="ghost"></DeleteAction>
           </DropdownMenuContent>
         </DropdownMenu>
       )

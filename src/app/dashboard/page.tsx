@@ -12,9 +12,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 const Dashboard = () => {
-  const { data, error, isLoading, isValidating } = useSWR('/api/admin/dashboard/product', (url) => fetcher(url), { revalidateIfStale: false, revalidateOnFocus: false })
+  const { data, error, isLoading, isValidating } = useSWR('/api/admin/dashboard/product', (url) => fetcher(url), { revalidateIfStale: true, revalidateOnFocus: false, revalidateOnMount: true })
   const user = useUserSelector(state => state.auth)
-  const navigate = useRouter()
 
   useEffect(() => {
     console.log(user)

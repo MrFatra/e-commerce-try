@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import sessionCheck from "@/lib/session";
-import { serverSideEdit } from "@/lib/upload";
+import { serverSideDelete, serverSideEdit } from "@/lib/upload";
+import { JsonObject } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
@@ -12,6 +13,26 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     } catch (error: any) {
         console.log(error.message)
         return NextResponse.json({ message: error.message }, { status: 401 })
+    }
+}
+
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+    try {
+        const { id } = params;
+        const user = await sessionCheck(req);
+
+        if (!user) throw new Error('Unauthorized User')
+
+        const data = await prisma.product.delete({
+            where: { id }
+        })
+
+        const deleteUpload = await serverSideDelete((data.image as JsonObject).url as string)
+
+        return NextResponse.json({ message: 'Deleted', code: 201, data, deleteUpload })
+    } catch (err: any) {
+        console.log(err.message)
+        return NextResponse.json({ message: err.message, code: 401 });
     }
 }
 

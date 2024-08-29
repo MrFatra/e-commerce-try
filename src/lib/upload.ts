@@ -57,3 +57,9 @@ export async function serverSideEdit(url: string, prevImgUrl: string, userId: st
     console.log(res);
     return res
 }
+
+export async function serverSideDelete(url: string) {
+    const res = await backendClient.publicFiles.deleteFile({ url });
+    console.log(res)
+    return res
+}

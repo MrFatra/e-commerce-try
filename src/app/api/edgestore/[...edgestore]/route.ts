@@ -32,7 +32,13 @@ const edgeStoreRouter = es.router({
         maxSize: 1 * 1024 * 1024, // 1MB
     }).input(z.object({
         type: z.enum(['product', 'profile'])
-    })).path(({ input }) => [{ type: input.type }]),
+    })).path(({ input }) => [{
+        type: input.type
+    }]).beforeDelete(({ ctx, fileInfo }) => {
+        console.log('beforeDelete: ', fileInfo)
+        console.log('context: ', ctx)
+        return true
+    }),
 });
 
 const handler = createEdgeStoreNextHandler({
